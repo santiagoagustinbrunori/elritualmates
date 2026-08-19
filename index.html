@@ -9,7 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
-
+  section {
+  scroll-margin-top: 90px;
+  }
   <style>
     /* ══════════════════════════════════════════
        TOKENS & RESET
@@ -1053,11 +1055,11 @@
         <span>El Ritual Mates</span>
       </a>
 
-      <ul class="nav-links">
-        <li><a href="inicio">Inicio</a></li>
-        <li><a href="productos">Productos</a></li>
-        <li><a href="contacto">Contacto</a></li>
-      </ul>
+    <ul class="nav-links">
+      <li><a href="inicio" class="nav-item">Inicio</a></li>
+      <li><a href="productos" class="nav-item">Productos</a></li>
+      <li><a href="contacto" class="nav-item">Contacto</a></li>
+    </ul>
 
       <button class="hamburger" id="hamburger" aria-label="Menú">
         <span></span><span></span><span></span>
@@ -1066,9 +1068,9 @@
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#inicio"    onclick="closeMobile()">Inicio</a>
-    <a href="#productos" onclick="closeMobile()">Productos</a>
-    <a href="#contacto"  onclick="closeMobile()">Contacto</a>
+    <a href="inicio" class="nav-item">Inicio</a>
+    <a href="productos" class="nav-item">Productos</a>
+    <a href="contacto" class="nav-item">Contacto</a>
   </div>
 
   <section id="inicio">
@@ -1825,6 +1827,46 @@
         closeModal();
       }
     });
+    document.querySelectorAll('.nav-item').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    const targetId = this.getAttribute('href'); // "inicio", "productos", etc.
+    const targetSection = document.getElementById(targetId);
+
+    if (targetSection) {
+      // Scroll suave hacia la sección
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+
+      // Modifica la barra de direcciones a /inicio sin recargar la página
+      history.pushState(null, '', '/' + targetId);
+    }
+
+    // Cierra el menú mobile si estaba abierto
+    closeMobile();
+  });
+});
+    // Detecta la URL al cargar y baja a la sección correspondiente
+window.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.replace(/^\/|\/$/g, '');
+  if (path) {
+    const targetSection = document.getElementById(path);
+    if (targetSection) {
+      setTimeout(() => {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }
+});
+
+// Soporte para las flechas Atrás / Adelante del navegador
+window.addEventListener('popstate', () => {
+  const path = window.location.pathname.replace(/^\/|\/$/g, '');
+  const targetSection = document.getElementById(path || 'inicio');
+  if (targetSection) {
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  }
+});
   </script>
 </body>
 </html>
